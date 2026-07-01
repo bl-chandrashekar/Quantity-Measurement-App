@@ -23,21 +23,38 @@ public final class QuantityLength {
     }
 
     public QuantityLength convertTo(LengthUnit targetUnit) {
-        Objects.requireNonNull(targetUnit, "targetUnit must not be null");
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("targetUnit must not be null");
+        }
         return new QuantityLength(convert(value, unit, targetUnit), targetUnit);
     }
 
     public QuantityLength add(QuantityLength other) {
         Objects.requireNonNull(other, "other must not be null");
-        double sumInFeet = toFeet() + other.toFeet();
-        double resultValue = sumInFeet / unit.getToFeetFactor();
-        return new QuantityLength(resultValue, unit);
+        return add(this, other, this.unit);
+    }
+
+    public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("targetUnit must not be null");
+        }
+        Objects.requireNonNull(other, "other must not be null");
+        return add(this, other, targetUnit);
+    }
+
+    public static QuantityLength add(QuantityLength first, QuantityLength second, LengthUnit targetUnit) {
+        if (targetUnit == null) {
+            throw new IllegalArgumentException("targetUnit must not be null");
+        }
+        Objects.requireNonNull(first, "first must not be null");
+        Objects.requireNonNull(second, "second must not be null");
+        double sumInFeet = first.toFeet() + second.toFeet();
+        double resultValue = sumInFeet / targetUnit.getToFeetFactor();
+        return new QuantityLength(resultValue, targetUnit);
     }
 
     public static QuantityLength add(double firstValue, LengthUnit firstUnit, double secondValue, LengthUnit secondUnit, LengthUnit targetUnit) {
-        QuantityLength first = new QuantityLength(firstValue, firstUnit);
-        QuantityLength second = new QuantityLength(secondValue, secondUnit);
-        return new QuantityLength(convert(first.toFeet() + second.toFeet(), LengthUnit.FEET, targetUnit), targetUnit);
+        return add(new QuantityLength(firstValue, firstUnit), new QuantityLength(secondValue, secondUnit), targetUnit);
     }
 
     public static double convert(double value, LengthUnit sourceUnit, LengthUnit targetUnit) {
