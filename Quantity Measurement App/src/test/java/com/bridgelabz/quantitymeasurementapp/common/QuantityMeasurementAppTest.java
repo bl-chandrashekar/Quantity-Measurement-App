@@ -4,107 +4,71 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class QuantityMeasurementAppTest {
+class QuantityLengthTest {
 
     @Test
-    void givenSameFeetValues_whenCompared_thenReturnTrue() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet second = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(first.equals(second), "Expected equal feet values to be equal.");
+    void givenFeetToFeetSameValue_whenCompared_thenReturnTrue() {
+        QuantityLength first = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength second = new QuantityLength(1.0, LengthUnit.FEET);
+        assertTrue(first.equals(second));
     }
 
     @Test
-    void givenDifferentFeetValues_whenCompared_thenReturnFalse() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet second = new QuantityMeasurementApp.Feet(2.0);
-
-        assertFalse(first.equals(second), "Expected different feet values to be not equal.");
+    void givenInchToInchSameValue_whenCompared_thenReturnTrue() {
+        QuantityLength first = new QuantityLength(1.0, LengthUnit.INCHES);
+        QuantityLength second = new QuantityLength(1.0, LengthUnit.INCHES);
+        assertTrue(first.equals(second));
     }
 
     @Test
-    void givenNullWhenComparedToFeet_thenReturnFalse() {
-        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
-
-        assertFalse(feet.equals(null), "Expected feet comparison with null to be false.");
+    void givenFeetToFeetDifferentValue_whenCompared_thenReturnFalse() {
+        QuantityLength first = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength second = new QuantityLength(2.0, LengthUnit.FEET);
+        assertFalse(first.equals(second));
     }
 
     @Test
-    void givenNonFeetObjectWhenComparedToFeet_thenReturnFalse() {
-        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
-
-        assertFalse(feet.equals("1.0"), "Expected feet comparison with another type to be false.");
+    void givenInchToInchDifferentValue_whenCompared_thenReturnFalse() {
+        QuantityLength first = new QuantityLength(1.0, LengthUnit.INCHES);
+        QuantityLength second = new QuantityLength(2.0, LengthUnit.INCHES);
+        assertFalse(first.equals(second));
     }
 
     @Test
-    void givenSameFeetReference_whenCompared_thenReturnTrue() {
-        QuantityMeasurementApp.Feet feet = new QuantityMeasurementApp.Feet(1.0);
-
-        assertTrue(feet.equals(feet), "Expected same feet reference comparison to be true.");
+    void givenEquivalentFeetAndInches_whenCompared_thenReturnTrue() {
+        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
+        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
+        assertTrue(feet.equals(inches));
     }
 
     @Test
-    void givenEqualFeetObjects_whenHashCodesCompared_thenReturnSameHashCode() {
-        QuantityMeasurementApp.Feet first = new QuantityMeasurementApp.Feet(1.0);
-        QuantityMeasurementApp.Feet second = new QuantityMeasurementApp.Feet(1.0);
-
-        assertEquals(first.hashCode(), second.hashCode(), "Expected equal feet objects to have same hash code.");
+    void givenEquivalentInchesAndFeet_whenCompared_thenReturnTrue() {
+        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
+        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
+        assertTrue(inches.equals(feet));
     }
 
     @Test
-    void givenSameInchesValues_whenCompared_thenReturnTrue() {
-        QuantityMeasurementApp.Inches first = new QuantityMeasurementApp.Inches(1.0);
-        QuantityMeasurementApp.Inches second = new QuantityMeasurementApp.Inches(1.0);
-
-        assertTrue(first.equals(second), "Expected equal inches values to be equal.");
+    void givenNullWhenCompared_thenReturnFalse() {
+        QuantityLength quantity = new QuantityLength(1.0, LengthUnit.FEET);
+        assertFalse(quantity.equals(null));
     }
 
     @Test
-    void givenDifferentInchesValues_whenCompared_thenReturnFalse() {
-        QuantityMeasurementApp.Inches first = new QuantityMeasurementApp.Inches(1.0);
-        QuantityMeasurementApp.Inches second = new QuantityMeasurementApp.Inches(2.0);
-
-        assertFalse(first.equals(second), "Expected different inches values to be not equal.");
+    void givenSameReference_whenCompared_thenReturnTrue() {
+        QuantityLength quantity = new QuantityLength(1.0, LengthUnit.FEET);
+        assertTrue(quantity.equals(quantity));
     }
 
     @Test
-    void givenNullWhenComparedToInches_thenReturnFalse() {
-        QuantityMeasurementApp.Inches inches = new QuantityMeasurementApp.Inches(1.0);
-
-        assertFalse(inches.equals(null), "Expected inches comparison with null to be false.");
+    void givenNullUnit_whenConstructed_thenThrowException() {
+        assertThrows(NullPointerException.class, () -> new QuantityLength(1.0, null));
     }
 
     @Test
-    void givenNonInchesObjectWhenComparedToInches_thenReturnFalse() {
-        QuantityMeasurementApp.Inches inches = new QuantityMeasurementApp.Inches(1.0);
-
-        assertFalse(inches.equals("1.0"), "Expected inches comparison with another type to be false.");
-    }
-
-    @Test
-    void givenSameInchesReference_whenCompared_thenReturnTrue() {
-        QuantityMeasurementApp.Inches inches = new QuantityMeasurementApp.Inches(1.0);
-
-        assertTrue(inches.equals(inches), "Expected same inches reference comparison to be true.");
-    }
-
-    @Test
-    void givenEqualInchesObjects_whenHashCodesCompared_thenReturnSameHashCode() {
-        QuantityMeasurementApp.Inches first = new QuantityMeasurementApp.Inches(1.0);
-        QuantityMeasurementApp.Inches second = new QuantityMeasurementApp.Inches(1.0);
-
-        assertEquals(first.hashCode(), second.hashCode(), "Expected equal inches objects to have same hash code.");
-    }
-
-    @Test
-    void givenFeetComparisonHelpers_whenCalled_thenReturnExpectedResult() {
-        assertTrue(QuantityMeasurementApp.compareFeetEquality(1.0, 1.0));
-        assertFalse(QuantityMeasurementApp.compareFeetEquality(1.0, 2.0));
-    }
-
-    @Test
-    void givenInchesComparisonHelpers_whenCalled_thenReturnExpectedResult() {
-        assertTrue(QuantityMeasurementApp.compareInchesEquality(1.0, 1.0));
-        assertFalse(QuantityMeasurementApp.compareInchesEquality(1.0, 2.0));
+    void givenCompareHelper_whenCalled_thenReturnExpectedResult() {
+        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.FEET, 12.0, LengthUnit.INCHES));
+        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.INCHES, 1.0, LengthUnit.INCHES));
+        assertFalse(QuantityMeasurementApp.compareLength(1.0, LengthUnit.FEET, 2.0, LengthUnit.FEET));
     }
 }
