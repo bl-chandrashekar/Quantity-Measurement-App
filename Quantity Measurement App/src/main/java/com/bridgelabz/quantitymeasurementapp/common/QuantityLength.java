@@ -7,6 +7,9 @@ public final class QuantityLength {
     private final LengthUnit unit;
 
     public QuantityLength(double value, LengthUnit unit) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("value must be a finite number");
+        }
         this.value = value;
         this.unit = Objects.requireNonNull(unit, "unit must not be null");
     }
@@ -17,6 +20,21 @@ public final class QuantityLength {
 
     public LengthUnit getUnit() {
         return unit;
+    }
+
+    public QuantityLength convertTo(LengthUnit targetUnit) {
+        Objects.requireNonNull(targetUnit, "targetUnit must not be null");
+        return new QuantityLength(convert(value, unit, targetUnit), targetUnit);
+    }
+
+    public static double convert(double value, LengthUnit sourceUnit, LengthUnit targetUnit) {
+        if (!Double.isFinite(value)) {
+            throw new IllegalArgumentException("value must be a finite number");
+        }
+        Objects.requireNonNull(sourceUnit, "sourceUnit must not be null");
+        Objects.requireNonNull(targetUnit, "targetUnit must not be null");
+        double feetValue = value * sourceUnit.getToFeetFactor();
+        return feetValue / targetUnit.getToFeetFactor();
     }
 
     private double toFeet() {
