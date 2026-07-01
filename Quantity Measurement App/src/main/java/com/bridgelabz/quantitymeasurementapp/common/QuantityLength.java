@@ -27,6 +27,19 @@ public final class QuantityLength {
         return new QuantityLength(convert(value, unit, targetUnit), targetUnit);
     }
 
+    public QuantityLength add(QuantityLength other) {
+        Objects.requireNonNull(other, "other must not be null");
+        double sumInFeet = toFeet() + other.toFeet();
+        double resultValue = sumInFeet / unit.getToFeetFactor();
+        return new QuantityLength(resultValue, unit);
+    }
+
+    public static QuantityLength add(double firstValue, LengthUnit firstUnit, double secondValue, LengthUnit secondUnit, LengthUnit targetUnit) {
+        QuantityLength first = new QuantityLength(firstValue, firstUnit);
+        QuantityLength second = new QuantityLength(secondValue, secondUnit);
+        return new QuantityLength(convert(first.toFeet() + second.toFeet(), LengthUnit.FEET, targetUnit), targetUnit);
+    }
+
     public static double convert(double value, LengthUnit sourceUnit, LengthUnit targetUnit) {
         if (!Double.isFinite(value)) {
             throw new IllegalArgumentException("value must be a finite number");
