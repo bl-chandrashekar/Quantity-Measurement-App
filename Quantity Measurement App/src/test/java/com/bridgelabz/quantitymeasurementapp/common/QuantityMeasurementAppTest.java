@@ -7,57 +7,58 @@ import static org.junit.jupiter.api.Assertions.*;
 class QuantityLengthTest {
 
     @Test
-    void givenFeetToFeetSameValue_whenCompared_thenReturnTrue() {
-        QuantityLength first = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength second = new QuantityLength(1.0, LengthUnit.FEET);
-        assertTrue(first.equals(second));
+    void givenYardToYardSameValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.YARDS).equals(new QuantityLength(1.0, LengthUnit.YARDS)));
     }
 
     @Test
-    void givenInchToInchSameValue_whenCompared_thenReturnTrue() {
-        QuantityLength first = new QuantityLength(1.0, LengthUnit.INCHES);
-        QuantityLength second = new QuantityLength(1.0, LengthUnit.INCHES);
-        assertTrue(first.equals(second));
+    void givenYardToYardDifferentValue_whenCompared_thenReturnFalse() {
+        assertFalse(new QuantityLength(1.0, LengthUnit.YARDS).equals(new QuantityLength(2.0, LengthUnit.YARDS)));
     }
 
     @Test
-    void givenFeetToFeetDifferentValue_whenCompared_thenReturnFalse() {
-        QuantityLength first = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength second = new QuantityLength(2.0, LengthUnit.FEET);
-        assertFalse(first.equals(second));
+    void givenYardToFeetEquivalentValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.YARDS).equals(new QuantityLength(3.0, LengthUnit.FEET)));
     }
 
     @Test
-    void givenInchToInchDifferentValue_whenCompared_thenReturnFalse() {
-        QuantityLength first = new QuantityLength(1.0, LengthUnit.INCHES);
-        QuantityLength second = new QuantityLength(2.0, LengthUnit.INCHES);
-        assertFalse(first.equals(second));
+    void givenFeetToYardEquivalentValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(3.0, LengthUnit.FEET).equals(new QuantityLength(1.0, LengthUnit.YARDS)));
     }
 
     @Test
-    void givenEquivalentFeetAndInches_whenCompared_thenReturnTrue() {
-        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
-        assertTrue(feet.equals(inches));
+    void givenYardToInchesEquivalentValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.YARDS).equals(new QuantityLength(36.0, LengthUnit.INCHES)));
     }
 
     @Test
-    void givenEquivalentInchesAndFeet_whenCompared_thenReturnTrue() {
-        QuantityLength inches = new QuantityLength(12.0, LengthUnit.INCHES);
-        QuantityLength feet = new QuantityLength(1.0, LengthUnit.FEET);
-        assertTrue(inches.equals(feet));
+    void givenInchesToYardEquivalentValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(36.0, LengthUnit.INCHES).equals(new QuantityLength(1.0, LengthUnit.YARDS)));
     }
 
     @Test
-    void givenNullWhenCompared_thenReturnFalse() {
-        QuantityLength quantity = new QuantityLength(1.0, LengthUnit.FEET);
-        assertFalse(quantity.equals(null));
+    void givenYardToFeetNonEquivalentValue_whenCompared_thenReturnFalse() {
+        assertFalse(new QuantityLength(1.0, LengthUnit.YARDS).equals(new QuantityLength(2.0, LengthUnit.FEET)));
     }
 
     @Test
-    void givenSameReference_whenCompared_thenReturnTrue() {
-        QuantityLength quantity = new QuantityLength(1.0, LengthUnit.FEET);
-        assertTrue(quantity.equals(quantity));
+    void givenCentimetersToInchesEquivalentValue_whenCompared_thenReturnTrue() {
+        assertTrue(new QuantityLength(1.0, LengthUnit.CENTIMETERS).equals(new QuantityLength(0.393701, LengthUnit.INCHES)));
+    }
+
+    @Test
+    void givenCentimetersToFeetNonEquivalentValue_whenCompared_thenReturnFalse() {
+        assertFalse(new QuantityLength(1.0, LengthUnit.CENTIMETERS).equals(new QuantityLength(1.0, LengthUnit.FEET)));
+    }
+
+    @Test
+    void givenMultiUnitTransitiveScenario_whenCompared_thenReturnTrue() {
+        QuantityLength a = new QuantityLength(1.0, LengthUnit.YARDS);
+        QuantityLength b = new QuantityLength(3.0, LengthUnit.FEET);
+        QuantityLength c = new QuantityLength(36.0, LengthUnit.INCHES);
+        assertTrue(a.equals(b));
+        assertTrue(b.equals(c));
+        assertTrue(a.equals(c));
     }
 
     @Test
@@ -66,9 +67,21 @@ class QuantityLengthTest {
     }
 
     @Test
-    void givenCompareHelper_whenCalled_thenReturnExpectedResult() {
-        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.FEET, 12.0, LengthUnit.INCHES));
-        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.INCHES, 1.0, LengthUnit.INCHES));
-        assertFalse(QuantityMeasurementApp.compareLength(1.0, LengthUnit.FEET, 2.0, LengthUnit.FEET));
+    void givenSameReference_whenCompared_thenReturnTrue() {
+        QuantityLength quantity = new QuantityLength(2.0, LengthUnit.YARDS);
+        assertTrue(quantity.equals(quantity));
+    }
+
+    @Test
+    void givenNullComparison_whenCompared_thenReturnFalse() {
+        assertFalse(new QuantityLength(2.0, LengthUnit.YARDS).equals(null));
+    }
+
+    @Test
+    void givenHelper_whenCalled_thenReturnExpectedResult() {
+        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.YARDS, 3.0, LengthUnit.FEET));
+        assertTrue(QuantityMeasurementApp.compareLength(1.0, LengthUnit.YARDS, 36.0, LengthUnit.INCHES));
+        assertTrue(QuantityMeasurementApp.compareLength(2.0, LengthUnit.CENTIMETERS, 2.0, LengthUnit.CENTIMETERS));
+        assertFalse(QuantityMeasurementApp.compareLength(1.0, LengthUnit.CENTIMETERS, 1.0, LengthUnit.FEET));
     }
 }
