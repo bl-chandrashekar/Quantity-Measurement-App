@@ -26,12 +26,13 @@ public final class QuantityLength {
         if (targetUnit == null) {
             throw new IllegalArgumentException("targetUnit must not be null");
         }
-        return new QuantityLength(convert(value, unit, targetUnit), targetUnit);
+        double baseValue = unit.convertToBaseUnit(value);
+        return new QuantityLength(targetUnit.convertFromBaseUnit(baseValue), targetUnit);
     }
 
     public QuantityLength add(QuantityLength other) {
         Objects.requireNonNull(other, "other must not be null");
-        return add(this, other, this.unit);
+        return add(other, this.unit);
     }
 
     public QuantityLength add(QuantityLength other, LengthUnit targetUnit) {
@@ -48,8 +49,8 @@ public final class QuantityLength {
         }
         Objects.requireNonNull(first, "first must not be null");
         Objects.requireNonNull(second, "second must not be null");
-        double sumInFeet = first.toFeet() + second.toFeet();
-        double resultValue = sumInFeet / targetUnit.getToFeetFactor();
+        double sumInBaseUnit = first.unit.convertToBaseUnit(first.value) + second.unit.convertToBaseUnit(second.value);
+        double resultValue = targetUnit.convertFromBaseUnit(sumInBaseUnit);
         return new QuantityLength(resultValue, targetUnit);
     }
 
@@ -63,12 +64,7 @@ public final class QuantityLength {
         }
         Objects.requireNonNull(sourceUnit, "sourceUnit must not be null");
         Objects.requireNonNull(targetUnit, "targetUnit must not be null");
-        double feetValue = value * sourceUnit.getToFeetFactor();
-        return feetValue / targetUnit.getToFeetFactor();
-    }
-
-    private double toFeet() {
-        return value * unit.getToFeetFactor();
+        return targetUnit.convertFromBaseUnit(sourceUnit.convertToBaseUnit(value));
     }
 
     @Override
@@ -80,12 +76,12 @@ public final class QuantityLength {
             return false;
         }
         QuantityLength other = (QuantityLength) obj;
-        return Double.compare(this.toFeet(), other.toFeet()) == 0;
+        return Double.compare(this.unit.convertToBaseUnit(this.value), other.unit.convertToBaseUnit(other.value)) == 0;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(toFeet());
+        return Objects.hash(unit.convertToBaseUnit(value));
     }
 
     @Override
